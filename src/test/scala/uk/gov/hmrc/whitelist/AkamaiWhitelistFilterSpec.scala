@@ -23,7 +23,7 @@ import play.api.test.Helpers._
 
 class AkamaiWhitelistFilterSpec extends PlaySpec with TestApp with ScalaFutures {
 
-  "WhitelistFilter" must {
+  "AkamaiWhitelistFilter" must {
 
     "return a `NotImplemented` when no `True-Client-IP` header is found" in {
 
@@ -49,12 +49,20 @@ class AkamaiWhitelistFilterSpec extends PlaySpec with TestApp with ScalaFutures 
       redirectLocation(result) must be (Some("/destination"))
     }
 
-    "check that the current URL is not the same as the destination URL" in {
+    "return `Forbidden` if the user would end up in a redirect loop" in {
+
       val Some(result) = route(FakeRequest("GET", "/destination").withHeaders(
         "True-Client-IP" -> "someotherip"
       ))
 
       status(result) mustBe FORBIDDEN
+    }
+
+    "return `Ok` if the route to be accessed is an excluded path" in {
+
+      val Some(result) = route(FakeRequest("GET", "/healthcheck"))
+
+      status(result) mustBe OK
     }
   }
 }

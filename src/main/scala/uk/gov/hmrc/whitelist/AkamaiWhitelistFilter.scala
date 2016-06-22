@@ -28,20 +28,29 @@ trait AkamaiWhitelistFilter extends Filter {
   private def isCircularDestination(requestHeader: RequestHeader): Boolean  =
     requestHeader.uri == destination.url
 
+  private def toCall(rh: RequestHeader): Call =
+    Call(rh.method, rh.uri)
+
   def whitelist: Seq[String]
+
+  def excludedPaths: Seq[Call]
 
   def destination: Call
 
   override def apply
   (f: (RequestHeader) => Future[Result])
   (rh: RequestHeader): Future[Result] =
-    rh.headers.get(trueClient) map {
-      ip =>
-        if (whitelist.contains(ip))
-          f(rh)
-        else if (isCircularDestination(rh))
-          Future.successful(Forbidden)
-        else
-          Future.successful(Redirect(destination))
-    } getOrElse Future.successful(NotImplemented)
+    if (excludedPaths contains toCall(rh)) {
+      f(rh)
+    } else {
+      rh.headers.get(trueClient) map {
+        ip =>
+          if (whitelist.contains(ip))
+            f(rh)
+          else if (isCircularDestination(rh))
+            Future.successful(Forbidden)
+          else
+            Future.successful(Redirect(destination))
+      } getOrElse Future.successful(NotImplemented)
+    }
 }
