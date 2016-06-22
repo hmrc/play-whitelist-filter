@@ -33,7 +33,7 @@ trait AkamaiWhitelistFilter extends Filter {
 
   def whitelist: Seq[String]
 
-  def excludedPaths: Seq[Call]
+  def excludedPaths: Seq[Call] = Seq.empty
 
   def destination: Call
 
