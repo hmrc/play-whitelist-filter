@@ -37,7 +37,8 @@ trait AkamaiWhitelistFilter extends Filter {
 
   def destination: Call
 
-  def noHeaderAction = { Future.successful(NotImplemented) }
+  def noHeaderAction(f: (RequestHeader) => Future[Result],
+                    rh: RequestHeader): Future[Result] = Future.successful(NotImplemented)
 
   override def apply
   (f: (RequestHeader) => Future[Result])
@@ -53,6 +54,6 @@ trait AkamaiWhitelistFilter extends Filter {
             Future.successful(Forbidden)
           else
             Future.successful(Redirect(destination))
-      } getOrElse noHeaderAction
+      } getOrElse noHeaderAction(f, rh)
     }
 }
