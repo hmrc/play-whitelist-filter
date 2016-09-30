@@ -19,13 +19,14 @@ package uk.gov.hmrc.whitelist
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-class AkamaiWhitelistFilterSpec extends AkamaiWhitelistFilterCommonSpec with TestApp {
+class AkamaiWhitelistFilterWithCustomFailureDefaultSpec extends AkamaiWhitelistFilterCommonSpec with TestAppWithCustomFailureDefault {
 
   "AkamaiWhitelistFilter" must {
 
-    "return a `NotImplemented` when no `True-Client-IP` header is found" in {
+    "return the success response when no `True-Client-IP` header is found" in {
       val Some(result) = route(FakeRequest("GET", "/index"))
-      status(result) must be (NOT_IMPLEMENTED)
+      status(result) must be (OK)
+      contentAsString(result) must be ("success")
     }
   }
 }
