@@ -24,7 +24,7 @@ class AkamaiWhitelistFilterWithCustomFailureDefaultSpec extends AkamaiWhitelistF
   "AkamaiWhitelistFilter" must {
 
     "return the success response when no `True-Client-IP` header is found" in {
-      val Some(result) = route(FakeRequest("GET", "/index"))
+      val Some(result) = route(app, FakeRequest("GET", "/index"))
       status(result) must be (OK)
       contentAsString(result) must be ("success")
     }
