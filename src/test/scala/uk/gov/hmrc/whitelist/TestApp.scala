@@ -16,27 +16,34 @@
 
 package uk.gov.hmrc.whitelist
 
+import javax.inject.{Inject, Singleton}
+
+import akka.stream.Materializer
 import org.scalatest.Suite
 import org.scalatestplus.play.OneAppPerSuite
-import play.api.mvc.{Call, WithFilters, Action}
-import play.api.test.FakeApplication
+import play.api.Application
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results._
+import play.api.mvc.{Action, Call}
 
 trait TestApp extends OneAppPerSuite {
   self: Suite =>
 
-  object Global extends WithFilters(new AkamaiWhitelistFilter {
-    override lazy val whitelist: Seq[String] = Seq("127.0.0.1")
-    override lazy val destination: Call = Call("GET", "/destination")
-    override lazy val excludedPaths: Seq[Call] = Seq(Call("GET", "/healthcheck"))
-  })
-
-  override implicit lazy val app: FakeApplication = FakeApplication(
-    withGlobal = Some(Global),
-    withRoutes = {
+  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+    .bindings(bind(classOf[AkamaiWhitelistFilter]).to(classOf[TestAkamaiWhitelistFilter]))
+    .configure("play.http.filters" -> "uk.gov.hmrc.whitelist.TestFilters")
+    .routes({
       case ("GET", "/destination") => Action(Ok("destination"))
       case ("GET", "/index") => Action(Ok("success"))
       case ("GET", "/healthcheck") => Action(Ok("ping"))
-    }
-  )
+    })
+    .build
+}
+
+@Singleton
+private class TestAkamaiWhitelistFilter @Inject() (override val mat: Materializer) extends AkamaiWhitelistFilter {
+  override lazy val whitelist: Seq[String] = Seq("127.0.0.1")
+  override lazy val destination: Call = Call("GET", "/destination")
+  override lazy val excludedPaths: Seq[Call] = Seq(Call("GET", "/healthcheck"))
 }

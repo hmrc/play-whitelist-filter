@@ -20,7 +20,7 @@ object HmrcBuild extends Build {
         "com.typesafe.play" %% "play" % PlayVersion.current,
         "org.scalactic" %% "scalactic" % "2.2.6" % "test",
         "org.scalatest" %% "scalatest" % "2.2.6" % "test",
-        "org.scalatestplus" %% "play" % "1.2.0" % "test",
+        "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % "test",
         "org.pegdown" % "pegdown" % "1.5.0" % "test"
       ),
       Developers()

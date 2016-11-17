@@ -17,15 +17,16 @@
 package uk.gov.hmrc.whitelist
 
 import org.scalatest.concurrent.ScalaFutures
+import org.scalatestplus.play.OneAppPerSuite
 import org.scalatestplus.play.PlaySpec
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
-trait AkamaiWhitelistFilterCommonSpec extends PlaySpec with ScalaFutures {
+trait AkamaiWhitelistFilterCommonSpec extends PlaySpec with ScalaFutures { this: OneAppPerSuite =>
 
   "AkamaiWhitelistFilter (Common)" must {
     "return successfully when a valid `True-Client-IP` header is found" in {
-      val Some(result) = route(FakeRequest("GET", "/index").withHeaders(
+      val Some(result) = route(app, FakeRequest("GET", "/index").withHeaders(
         "True-Client-IP" -> "127.0.0.1"
       ))
       status(result) must be(OK)
@@ -33,7 +34,7 @@ trait AkamaiWhitelistFilterCommonSpec extends PlaySpec with ScalaFutures {
     }
 
     "return a `Redirect` when an invalid `True-Client-IP` header is found" in {
-      val Some(result) = route(FakeRequest("GET", "/index").withHeaders(
+      val Some(result) = route(app, FakeRequest("GET", "/index").withHeaders(
         "True-Client-IP" -> "someotherip"
       ))
       status(result) must be(SEE_OTHER)
@@ -41,7 +42,7 @@ trait AkamaiWhitelistFilterCommonSpec extends PlaySpec with ScalaFutures {
     }
 
     "return `Forbidden` if the user would end up in a redirect loop" in {
-      val Some(result) = route(FakeRequest("GET", "/destination").withHeaders(
+      val Some(result) = route(app, FakeRequest("GET", "/destination").withHeaders(
         "True-Client-IP" -> "someotherip"
       ))
 
@@ -49,7 +50,7 @@ trait AkamaiWhitelistFilterCommonSpec extends PlaySpec with ScalaFutures {
     }
 
     "return `Ok` if the route to be accessed is an excluded path" in {
-      val Some(result) = route(FakeRequest("GET", "/healthcheck"))
+      val Some(result) = route(app, FakeRequest("GET", "/healthcheck"))
 
       status(result) mustBe OK
     }
