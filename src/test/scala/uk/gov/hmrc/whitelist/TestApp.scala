@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
 
 package uk.gov.hmrc.whitelist
 
-import javax.inject.{Inject, Singleton}
-
 import akka.stream.Materializer
-import org.scalatest.Suite
+import javax.inject.{Inject, Singleton}
+import org.scalatest.TestSuite
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
 import play.api.inject.bind
@@ -28,7 +27,7 @@ import play.api.mvc.Results._
 import play.api.mvc.{Action, Call}
 
 trait TestApp extends OneAppPerSuite {
-  self: Suite =>
+  self: TestSuite =>
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .bindings(bind(classOf[AkamaiWhitelistFilter]).to(classOf[TestAkamaiWhitelistFilter]))
