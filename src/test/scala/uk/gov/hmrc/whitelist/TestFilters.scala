@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,4 @@ import javax.inject.Inject
 
 import play.api.http.DefaultHttpFilters
 
-class TestFilters @Inject() (
-  whitelist: AkamaiWhitelistFilter
-) extends DefaultHttpFilters(whitelist)
+class TestFilters @Inject()(whitelist: AkamaiWhitelistFilter) extends DefaultHttpFilters(whitelist)
