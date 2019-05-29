@@ -31,6 +31,7 @@ lazy val playWhitelistFilter = (project in file("."))
   .settings(
     name := appName,
     majorVersion := 3,
+    makePublicallyAvailableOnBintray := true,
     libraryDependencies ++= compileDependencies ++ testDependencies,
     scalaVersion := "2.11.12",
     crossScalaVersions := Seq("2.11.12", "2.12.8"),
