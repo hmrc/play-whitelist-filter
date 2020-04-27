@@ -15,7 +15,7 @@ Getting Started
   ```scala
   resolvers += Resolver.bintrayRepo("hmrc", "releases")
   libraryDependencies ++= Seq(
-    "uk.gov.hmrc" %% "play-whitelist-filter" % "3.2.0"
+    "uk.gov.hmrc" %% "play-whitelist-filter" % "3.3.0"
   )
   ```
   
