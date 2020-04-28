@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,8 @@ trait AkamaiWhitelistFilter extends Filter {
   def noHeaderAction(f: (RequestHeader) => Future[Result],
                     rh: RequestHeader): Future[Result] = Future.successful(NotImplemented)
 
+  def response: Result = Redirect(destination)
+
   override def apply
   (f: (RequestHeader) => Future[Result])
   (rh: RequestHeader): Future[Result] =
@@ -53,7 +55,7 @@ trait AkamaiWhitelistFilter extends Filter {
           else if (isCircularDestination(rh))
             Future.successful(Forbidden)
           else
-            Future.successful(Redirect(destination))
+            Future.successful(response)
       } getOrElse noHeaderAction(f, rh)
     }
 }
