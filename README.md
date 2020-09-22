@@ -2,6 +2,9 @@
 play-whitelist-filter
 =====================
 
+**This library is no longer maintained.  Please migrate to [play-allowlist-filter](https://github.com/hmrc/play-allowlist-filter)**
+
+
 NOTE v2 onwards is compatable with Play 2.5
 
 This library includes a ```Filter``` for the Play! framework which can be used to block users whose IP addresses are not on a predetermined whitelist.
